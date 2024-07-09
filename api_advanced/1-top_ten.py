@@ -1,23 +1,17 @@
 #!/usr/bin/python3
-"""get hot post function"""
+"""Prints the title of the first 10 hot posts listed for a given subreddit"""
 
-
-import json
 import requests
-import sys
 
 
 def top_ten(subreddit):
-    """get top ten hot post"""
-    if len(sys.argv) < 2:
-        return print(None)
-    else:
-        url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
-        headers = {"User-Agent": "Mozilla/5.0"}
-        result = requests.get(url, headers=headers, allow_redirects=False)
-        listing = []
-        if result.status_code != 200:
-            return print(None)
-        body = json.loads(result.text)
-        for i in body["data"]["children"]:
-            print(i["data"]["title"])
+    """Main function"""
+    URL = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
+
+    HEADERS = {"User-Agent": "PostmanRuntime/7.35.0"}
+    try:
+        RESPONSE = requests.get(URL, headers=HEADERS, allow_redirects=False)
+        HOT_POSTS = RESPONSE.json().get("data").get("children")
+        [print(post.get('data').get('title')) for post in HOT_POSTS]
+    except Exception:
+        print(None)
